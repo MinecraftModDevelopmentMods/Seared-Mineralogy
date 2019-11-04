@@ -1,0 +1,16 @@
+[
+ {
+   "modid": "searedmineralogy",
+   "name": "Seared Mineralogy",
+   "description": "Seared Mineralogy a Mineralogy and Tinkers Construct addon",
+   "version": "${version}",
+   "mcversion": "${mcversion}",
+   "url": "https://github.com/MinecraftModDevelopmentMods/Seared-Mineralogy",
+   "updateUrl": "",
+   "authorList": ["YaibaToKen, SkyBlade"],
+   "credits": "",
+   "logoFile": "",
+   "screenshots": [],
+   "dependencies": []
+ }
+]
