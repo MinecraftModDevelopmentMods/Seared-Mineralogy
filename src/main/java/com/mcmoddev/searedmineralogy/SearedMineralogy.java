@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 	name = SearedMineralogy.NAME,
 	modid = SearedMineralogy.MOD_ID,
 	version = SearedMineralogy.VERSION,
-	updateJSON = "https://github.com/MinecraftModDevelopmentMods/Seared-Mineralogy/",
+	updateJSON = "https://raw.githubusercontent.com/MinecraftModDevelopmentMods/Seared-Mineralogy/master/update.json",
 	certificateFingerprint = "@FINGERPRINT@",
 	acceptedMinecraftVersions = "[1.12, 1.12.2]"
 	//TODO Fill in the dependencies list.
