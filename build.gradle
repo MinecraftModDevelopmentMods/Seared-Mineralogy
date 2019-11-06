@@ -352,6 +352,11 @@ repositories {
     name 'tehnut'
     url 'http://tehnut.info/maven/'
   }
+
+  maven {
+    name 'CurseForge'
+    url 'https://minecraft.curseforge.com/api/maven/'
+  }
 }
 
 dependencies {
@@ -360,13 +365,17 @@ dependencies {
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.+') //testRuntimeOnly
 
   //Required.
-  deobfCompile 'slimeknights.mantle:Mantle:1.12-1.3.3.49+'
+  deobfCompile 'slimeknights.mantle:Mantle:1.12-1.3.3.55+'
   deobfCompile 'slimeknights:TConstruct:1.12.2-2.12.0.135+'
-  compile 'com.mcmoddev:Mineralogy:1.12.2-3.8.0.56'
+
+  compile 'ceramics:Ceramics:1.12:1.3.7'
+  compile 'tinkers-complement:TinkersComplement:1.12.2:0.4.2'
+
+  compile 'com.mcmoddev:Mineralogy:1.12.2-3.8.0.56+'
 
   //Not needed but nice to have in dev.
   deobfCompile 'mezz.jei:jei_1.12.2:4.12.0+'
-  deobfCompile 'mcp.mobius.waila:Hwyla:1.8.23-B38_1.12'
+  deobfCompile 'mcp.mobius.waila:Hwyla:1.8.23-B38_1.12+'
 
   if (GradleVersion.current() >= GradleVersion.version('2.13')) {
     testCompileOnly 'junit:junit:4.12'
