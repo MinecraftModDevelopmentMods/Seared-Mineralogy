@@ -1,1 +1,16 @@
+itemGroup.searedmineralogy=Seared Mineralogy
 
+tile.searedmineralogy.seared.stone.name=Seared %s Stone
+tile.searedmineralogy.seared.cobble.name=Seared %s Cobblestone
+tile.searedmineralogy.seared.paver.name=Seared %s Paver
+tile.searedmineralogy.seared.brick.name=Seared %s Bricks
+tile.searedmineralogy.seared.brick_cracked.name=Cracked Seared %s Bricks
+tile.searedmineralogy.seared.brick_fancy.name=Fancy Seared %s Bricks
+tile.searedmineralogy.seared.brick_square.name=Square Seared %s Bricks
+tile.searedmineralogy.seared.brick_triangle.name=Triangle Seared %s Bricks
+tile.searedmineralogy.seared.brick_small.name=Small Seared %s Bricks
+tile.searedmineralogy.seared.road.name=Seared %s Road
+tile.searedmineralogy.seared.tile.name=Seared %s Tiles
+tile.searedmineralogy.seared.creeper.name=Seared %s Creeperface
+
+tile.searedmineralogy.seared.tooltip=Part of the Smeltery. Safe for decoration.
