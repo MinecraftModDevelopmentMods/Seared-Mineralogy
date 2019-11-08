@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import slimeknights.mantle.item.ItemBlockMeta;
 
-public class ItemBlockSearedMeta extends ItemBlockMeta {
-	public ItemBlockSearedMeta(Block block) {
+public class ItemBlockSearedFaucetMeta extends ItemBlockMeta {
+	public ItemBlockSearedFaucetMeta(Block block) {
 		super(block);
 	}
 

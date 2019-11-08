@@ -3,14 +3,20 @@ package com.mcmoddev.searedmineralogy.smeltery;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.mcmoddev.mineralogy.Mineralogy;
-import com.mcmoddev.searedmineralogy.smeltery.item.ItemBlockSearedMeta;
+import com.mcmoddev.searedmineralogy.SearedMineralogy;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedFaucet;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedSmelteryController;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedTank;
+import com.mcmoddev.searedmineralogy.smeltery.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.block.EnumBlock;
 import slimeknights.mantle.block.EnumBlock.IEnumMeta;
@@ -21,10 +27,10 @@ import slimeknights.tconstruct.library.Util;
 import slimeknights.tconstruct.smeltery.block.*;
 import slimeknights.tconstruct.smeltery.block.BlockSeared.SearedType;
 import slimeknights.tconstruct.smeltery.item.ItemChannel;
-import slimeknights.tconstruct.smeltery.item.ItemTank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Pulse(
 	id = "TinkerSmeltery",
@@ -33,10 +39,7 @@ import java.util.List;
 public class TinkerSmeltery extends TinkerPulse {
 	public static final String PulseId = "SearedMineralogyTinkerSmeltery";
 	public static final Logger log = Util.getLogger("SearedMineralogyTinkerSmeltery");
-//	@SidedProxy(
-//		clientSide = "slimeknights.tconstruct.smeltery.SmelteryClientProxy",
-//		serverSide = "slimeknights.tconstruct.common.CommonProxy"
-//	)
+
 	public static List<BlockSeared> searedBlocks = new ArrayList<>();
 	public static List<BlockSmelteryController> smelteryControllers = new ArrayList<>();
 	public static List<BlockTank> searedTanks = new ArrayList<>();
@@ -61,10 +64,6 @@ public class TinkerSmeltery extends TinkerPulse {
 	public static List<Block> searedStairsRoads = new ArrayList<>();
 	public static List<Block> searedStairsTiles = new ArrayList<>();
 	public static List<Block> searedStairsCreepers = new ArrayList<>();
-	public static ImmutableSet<Block> validSmelteryBlocks;
-	public static ImmutableSet<Block> searedStairsSlabs;
-	public static ImmutableSet<Block> validTinkerTankBlocks;
-	public static ImmutableSet<Block> validTinkerTankFloorBlocks;
 
 	public TinkerSmeltery() {
 	}
@@ -86,56 +85,38 @@ public class TinkerSmeltery extends TinkerPulse {
 					&& !key.getPath().contains("drywall_")
 					&& !key.getPath().contains("lamp")
 				) {
-					com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared blockSeared = new com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared(Block.REGISTRY.getObject(key));
+					Block block = Block.REGISTRY.getObject(key);
+					com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared blockSeared = new com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared(block);
 					BlockSeared searedBlock = registerBlock(registry, blockSeared, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath());
+					String baseBlockName = blockSeared.getRegistryName().getPath();
 					searedBlocks.add(searedBlock);
-					// TODO implement BlockSearedSmelteryController
-//					smelteryController = registerBlock(registry, new BlockSmelteryController(), "smeltery_controller");
-					// TODO implement BlockSearedTank
-//					searedTank = registerBlock(registry, new BlockTank(), "seared_tank");
-					// TODO implement BlockSearedFaucet
-//					faucet = registerBlock(registry, new BlockFaucet(), "faucet");
-					// TODO implement BlockSearedChannel
-//					channel = registerBlock(registry, new BlockChannel(), "channel");
-					// TODO implement BlockSearedCasting
-//					castingBlock = registerBlock(registry, new BlockCasting(), "casting");
-					// TODO implement BlockSearedSmelteryIO
-//					smelteryIO = registerBlock(registry, new BlockSmelteryIO(), "smeltery_io");
-					// TODO implement BlockSearedSearedGlass
-//					searedGlass = registerBlock(registry, new BlockSearedGlass(), "seared_glass");
-					// TODO implement BlockSearedSearedFurnaceController
-//					searedFurnaceController = registerBlock(registry, new BlockSearedFurnaceController(), "seared_furnace_controller");
-					// TODO implement BlockSearedTinkerTankController
-//					tinkerTankController = registerBlock(registry, new BlockTinkerTankController(), "tinker_tank_controller");
+					smelteryControllers.add(registerBlock(registry, new BlockSearedSmelteryController(block), baseBlockName + "_smeltery_controller"));
+					searedTanks.add(registerBlock(registry, new BlockSearedTank(block), baseBlockName +"_seared_tank"));
+					faucets.add(registerBlock(registry, new BlockSearedFaucet(block), baseBlockName + "_faucet"));
+//					channels.add(registerBlock(registry, new BlockChannel(), baseBlockName + "channel"));
+//					castingBlocks.add(registerBlock(registry, new BlockCasting(), baseBlockName + "casting"));
+//					smelteryIOs.add(registerBlock(registry, new BlockSmelteryIO(), baseBlockName + "smeltery_io"));
+//					searedGlasses.add(registerBlock(registry, new BlockSearedGlass(), baseBlockName + "seared_glass"));
+//					searedFurnaceControllers.add(registerBlock(registry, new BlockSearedFurnaceController(), baseBlockName + "seared_furnace_controller"));
+//					tinkerTankControllers.add(registerBlock(registry, new BlockTinkerTankController(), baseBlockName + "tinker_tank_controller"));
+
 					// TODO implement BlockSearedSlab
 //					searedSlab = registerBlock(registry, new BlockSearedSlab(), "seared_slab");
 					// TODO implement BlockSearedSlab2
 //					searedSlab2 = registerBlock(registry, new BlockSearedSlab2(), "seared_slab2");
-					// TODO implement BlockSearedSearedStairs
-//					searedStairsStones.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.STONE, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_stone"));
-//					searedStairsCobbles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.COBBLE, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_cobble"));
-//					searedStairsPavers.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.PAVER, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_paver"));
-//					searedStairsBricks.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_brick"));
-//					searedStairsBrickCrackeds.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_CRACKED, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_brick_cracked"));
-//					searedStairsBrickFancys.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_FANCY, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_brick_fancy"));
-//					searedStairsBrickSquares.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_SQUARE, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_brick_square"));
-//					searedStairsBrickTriangles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_TRIANGLE, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_brick_triangle"));
-//					searedStairsBrickSmalls.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_SMALL, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_brick_small"));
-//					searedStairsRoads.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.ROAD, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_road"));
-//					searedStairsTiles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.TILE, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_tile"));
-//					searedStairsCreepers.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.CREEPER, "seared_" + blockSeared.getBaseBlock().getRegistryName().getPath() + "_stairs_creeper"));
 
-					// TODO implement Tile Entity classes
-//					registerTE(TileSmeltery.class, "smeltery_controller");
-//					registerTE(TileSmelteryComponent.class, "smeltery_component");
-//					registerTE(TileTank.class, "tank");
-//					registerTE(TileFaucet.class, "faucet");
-//					registerTE(TileChannel.class, "channel");
-//					registerTE(TileCastingTable.class, "casting_table");
-//					registerTE(TileCastingBasin.class, "casting_basin");
-//					registerTE(TileDrain.class, "smeltery_drain");
-//					registerTE(TileSearedFurnace.class, "seared_furnace");
-//					registerTE(TileTinkerTank.class, "tinker_tank");
+					searedStairsStones.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.STONE, baseBlockName + "_stairs_stone"));
+					searedStairsCobbles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.COBBLE, baseBlockName + "_stairs_cobble"));
+					searedStairsPavers.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.PAVER, baseBlockName + "_stairs_paver"));
+					searedStairsBricks.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK, baseBlockName + "_stairs_brick"));
+					searedStairsBrickCrackeds.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_CRACKED, baseBlockName + "_stairs_brick_cracked"));
+					searedStairsBrickFancys.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_FANCY, baseBlockName + "_stairs_brick_fancy"));
+					searedStairsBrickSquares.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_SQUARE, baseBlockName + "_stairs_brick_square"));
+					searedStairsBrickTriangles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_TRIANGLE, baseBlockName + "_stairs_brick_triangle"));
+					searedStairsBrickSmalls.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.BRICK_SMALL, baseBlockName + "_stairs_brick_small"));
+					searedStairsRoads.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.ROAD, baseBlockName + "_stairs_road"));
+					searedStairsTiles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.TILE, baseBlockName + "_stairs_tile"));
+					searedStairsCreepers.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.CREEPER, baseBlockName + "_stairs_creeper"));
 				}
 			});
 	}
@@ -144,45 +125,52 @@ public class TinkerSmeltery extends TinkerPulse {
 	public void registerItems(Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
 		searedBlocks.forEach(searedBlock -> registerEnumItemBlock(registry, searedBlock));
-		smelteryControllers.forEach(smelteryController -> registerItemBlock(registry, smelteryController));
-		searedTanks.forEach(searedTank -> registerItemBlockProp(registry, new ItemTank(searedTank), BlockTank.TYPE));
-		faucets.forEach(faucet -> registerItemBlock(registry, faucet));
+		smelteryControllers.forEach(smelteryController -> registerItemBlockSmelteryController(registry, smelteryController));
+		searedTanks.forEach(searedTank -> registerItemBlockProp(registry, new ItemBlockSearedTankMeta(searedTank), BlockTank.TYPE));
+		faucets.forEach(faucet -> registerItemBlockFaucet(registry, faucet));
 		channels.forEach(channel -> registerItemBlock(registry, new ItemChannel(channel)));
 		castingBlocks.forEach(castingBlock -> registerItemBlockProp(registry, new ItemBlockMeta(castingBlock), BlockCasting.TYPE));
 		smelteryIOs.forEach(smelteryIO -> registerEnumItemBlock(registry, smelteryIO));
 		searedGlasses.forEach(searedGlass -> registerEnumItemBlock(registry, searedGlass));
 		searedFurnaceControllers.forEach(searedFurnaceController -> registerItemBlock(registry, searedFurnaceController));
 		tinkerTankControllers.forEach(tinkerTankController -> registerItemBlock(registry, tinkerTankController));
+
+		// Slabs
 		searedSlabs.forEach(searedSlab -> registerEnumItemBlockSlab(registry, searedSlab));
 		searedSlab2s.forEach(searedSlab2 -> registerEnumItemBlockSlab(registry, searedSlab2));
-		searedStairsStones.forEach(searedStairsStone -> registerItemBlock(registry, searedStairsStone));
-		searedStairsCobbles.forEach(searedStairsCobble -> registerItemBlock(registry, searedStairsCobble));
-		searedStairsPavers.forEach(searedStairsPaver -> registerItemBlock(registry, searedStairsPaver));
-		searedStairsBricks.forEach(searedStairsBrick -> registerItemBlock(registry, searedStairsBrick));
-		searedStairsBrickCrackeds.forEach(searedStairsBrickCracked -> registerItemBlock(registry, searedStairsBrickCracked));
-		searedStairsBrickFancys.forEach(searedStairsBrickFancy -> registerItemBlock(registry, searedStairsBrickFancy));
-		searedStairsBrickSquares.forEach(searedStairsBrickSquare -> registerItemBlock(registry, searedStairsBrickSquare));
-		searedStairsBrickTriangles.forEach(searedStairsBrickTriangle -> registerItemBlock(registry, searedStairsBrickTriangle));
-		searedStairsBrickSmalls.forEach(searedStairsBrickSmall -> registerItemBlock(registry, searedStairsBrickSmall));
-		searedStairsRoads.forEach(searedStairsRoad -> registerItemBlock(registry, searedStairsRoad));
-		searedStairsTiles.forEach(searedStairsTile -> registerItemBlock(registry, searedStairsTile));
-		searedStairsCreepers.forEach(searedStairsCreeper -> registerItemBlock(registry, searedStairsCreeper));
+
+		// Stairs
+		searedStairsStones.forEach(searedStairsStone -> registerItemBlockStairs(registry, searedStairsStone));
+		searedStairsCobbles.forEach(searedStairsCobble -> registerItemBlockStairs(registry, searedStairsCobble));
+		searedStairsPavers.forEach(searedStairsPaver -> registerItemBlockStairs(registry, searedStairsPaver));
+		searedStairsBricks.forEach(searedStairsBrick -> registerItemBlockStairs(registry, searedStairsBrick));
+		searedStairsBrickCrackeds.forEach(searedStairsBrickCracked -> registerItemBlockStairs(registry, searedStairsBrickCracked));
+		searedStairsBrickFancys.forEach(searedStairsBrickFancy -> registerItemBlockStairs(registry, searedStairsBrickFancy));
+		searedStairsBrickSquares.forEach(searedStairsBrickSquare -> registerItemBlockStairs(registry, searedStairsBrickSquare));
+		searedStairsBrickTriangles.forEach(searedStairsBrickTriangle -> registerItemBlockStairs(registry, searedStairsBrickTriangle));
+		searedStairsBrickSmalls.forEach(searedStairsBrickSmall -> registerItemBlockStairs(registry, searedStairsBrickSmall));
+		searedStairsRoads.forEach(searedStairsRoad -> registerItemBlockStairs(registry, searedStairsRoad));
+		searedStairsTiles.forEach(searedStairsTile -> registerItemBlockStairs(registry, searedStairsTile));
+		searedStairsCreepers.forEach(searedStairsCreeper -> registerItemBlockStairs(registry, searedStairsCreeper));
 
 		Builder<Block> builder = ImmutableSet.builder();
+		builder.addAll(slimeknights.tconstruct.smeltery.TinkerSmeltery.validSmelteryBlocks);
 		builder.addAll(searedBlocks);
 		builder.addAll(searedTanks);
 		builder.addAll(smelteryIOs);
 		builder.addAll(searedGlasses);
-		validSmelteryBlocks = builder.build();
-		validTinkerTankBlocks = builder.build();
+		slimeknights.tconstruct.smeltery.TinkerSmeltery.validSmelteryBlocks = builder.build();
+		slimeknights.tconstruct.smeltery.TinkerSmeltery.validTinkerTankBlocks = builder.build();
 
 		builder = ImmutableSet.builder();
+		builder.addAll(slimeknights.tconstruct.smeltery.TinkerSmeltery.validTinkerTankFloorBlocks);
 		builder.addAll(searedBlocks);
 		builder.addAll(smelteryIOs);
 		builder.addAll(searedGlasses);
-		validTinkerTankFloorBlocks = builder.build();
+		slimeknights.tconstruct.smeltery.TinkerSmeltery.validTinkerTankFloorBlocks = builder.build();
 
 		builder = ImmutableSet.builder();
+		builder.addAll(slimeknights.tconstruct.smeltery.TinkerSmeltery.searedStairsSlabs);
 		builder.addAll(searedBlocks);
 		builder.addAll(searedSlabs);
 		builder.addAll(searedSlab2s);
@@ -198,7 +186,7 @@ public class TinkerSmeltery extends TinkerPulse {
 		builder.addAll(searedStairsRoads);
 		builder.addAll(searedStairsTiles);
 		builder.addAll(searedStairsCreepers);
-		searedStairsSlabs = builder.build();
+		slimeknights.tconstruct.smeltery.TinkerSmeltery.searedStairsSlabs = builder.build();
 	}
 
 //	@Subscribe
@@ -459,38 +447,57 @@ public class TinkerSmeltery extends TinkerPulse {
 //	}
 
 	protected static <E extends Enum<E> & IEnumMeta & IStringSerializable> BlockSearedStairs registerBlockSearedStairsFrom(IForgeRegistry<Block> registry, EnumBlock<E> block, E value, String name) {
-		return registerBlock(registry, new BlockSearedStairs(block.getDefaultState().withProperty(block.prop, value)), name);
+		return registerBlock(
+			registry,
+			new com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedStairs(
+				block.getDefaultState().withProperty(block.prop, value),
+				(com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared) block, (SearedType) value),
+			name);
 	}
 
 	protected static <T extends EnumBlock<?>> T registerEnumItemBlock(IForgeRegistry<Item> registry, T block) {
-		ItemBlock itemBlock = new ItemBlockSearedMeta((com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared) block);
+		ItemBlock itemBlock = new ItemBlockSearedMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
-		register(registry, itemBlock, block.getRegistryName());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
 		ItemBlockMeta.setMappingProperty(block, block.prop);
 		return block;
 	}
 
-	protected static <T extends Block> T registerItemBlock(IForgeRegistry<Item> registry, T block) {
-		ItemBlock itemBlock = new ItemBlockSearedMeta((com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared) block);
+	protected static <T extends Block> T registerItemBlockFaucet(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedFaucetMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
-		register(registry, itemBlock, block.getRegistryName());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
 		return block;
 	}
 
-	// TODO implement ItemBlockSearedProp
-//	protected static <T extends Block> T registerItemBlockProp(IForgeRegistry<Item> registry, ItemBlock itemBlock, IProperty<?> property) {
-//		itemBlock.setTranslationKey(itemBlock.getBlock().getTranslationKey());
-//		register(registry, itemBlock, (ResourceLocation)itemBlock.getBlock().getRegistryName());
-//		ItemBlockMeta.setMappingProperty(itemBlock.getBlock(), property);
-//		return (T)itemBlock.getBlock();
-//	}
+	protected static <T extends Block> T registerItemBlockStairs(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedStairsMeta(block);
+		itemBlock.setTranslationKey(block.getTranslationKey());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+		return block;
+	}
 
-	// TODO implement ItemBlockSearedSlab
-//	protected static <T extends EnumBlockSlab<?>> T registerEnumItemBlockSlab(IForgeRegistry<Item> registry, T block) {
-//		ItemBlock itemBlock = new ItemBlockSlab(block);
-//		itemBlock.setTranslationKey(block.getTranslationKey());
-//		register(registry, itemBlock, (ResourceLocation)block.getRegistryName());
-//		ItemBlockMeta.setMappingProperty(block, block.prop);
-//		return block;
-//	}
+	protected static <T extends Block> T registerItemBlockSmelteryController(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedSmelteryControllerMeta(block);
+		itemBlock.setTranslationKey(block.getTranslationKey());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+		return block;
+	}
+
+	protected static <T extends Block> T registerBlock(IForgeRegistry<Block> registry, T block, String name) {
+		if (!name.equals(name.toLowerCase(Locale.US))) {
+			throw new IllegalArgumentException(String.format("Unlocalized names need to be all lowercase! Block: %s", name));
+		} else {
+			String prefixedName = SearedMineralogy.MOD_ID +"." + name;
+			block.setTranslationKey(prefixedName);
+			register(registry, block, name);
+			return block;
+		}
+	}
+
+	protected static <T extends IForgeRegistryEntry<T>> T register(IForgeRegistry<T> registry, T thing, String name) {
+		thing.setRegistryName(new ResourceLocation(SearedMineralogy.MOD_ID, name));
+		registry.register(thing);
+		return thing;
+	}
 }

@@ -7,11 +7,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import slimeknights.tconstruct.smeltery.block.BlockFaucet;
 
-public class BlockSeared extends slimeknights.tconstruct.smeltery.block.BlockSeared implements ISearedObject {
+public class BlockSearedFaucet extends BlockFaucet implements ISearedObject {
 	private Block baseBlock;
 
-	public BlockSeared(Block block) {
+	public BlockSearedFaucet(Block block) {
+		super();
 		this.baseBlock = block;
 		this.setCreativeTab(SearedMineralogy.CREATIVE_TAB);
 	}
@@ -28,9 +30,5 @@ public class BlockSeared extends slimeknights.tconstruct.smeltery.block.BlockSea
 	@Override
 	public float getExplosionResistance(Entity exploder) {
 		return (this.baseBlock.getExplosionResistance(exploder) * 2 / 3);
-	}
-
-	public static String getSearedType(int meta) {
-		return SearedType.values()[meta].name();
 	}
 }

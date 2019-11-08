@@ -2,17 +2,21 @@ package com.mcmoddev.searedmineralogy.smeltery.block;
 
 import com.mcmoddev.searedmineralogy.SearedMineralogy;
 import com.mcmoddev.searedmineralogy.smeltery.ISearedObject;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import slimeknights.tconstruct.smeltery.block.BlockSmelteryController;
 
-public class BlockSeared extends slimeknights.tconstruct.smeltery.block.BlockSeared implements ISearedObject {
+public class BlockSearedSmelteryController extends BlockSmelteryController implements ISearedObject {
 	private Block baseBlock;
 
-	public BlockSeared(Block block) {
-		this.baseBlock = block;
+	public BlockSearedSmelteryController(Block baseBlock) {
+		super();
+		this.baseBlock = baseBlock;
 		this.setCreativeTab(SearedMineralogy.CREATIVE_TAB);
 	}
 
@@ -30,7 +34,9 @@ public class BlockSeared extends slimeknights.tconstruct.smeltery.block.BlockSea
 		return (this.baseBlock.getExplosionResistance(exploder) * 2 / 3);
 	}
 
-	public static String getSearedType(int meta) {
-		return SearedType.values()[meta].name();
+	@Override
+	@MethodsReturnNonnullByDefault
+	public SoundType getSoundType() {
+		return this.baseBlock.getSoundType();
 	}
 }
