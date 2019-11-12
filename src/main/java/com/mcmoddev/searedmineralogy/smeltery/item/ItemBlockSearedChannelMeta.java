@@ -5,10 +5,10 @@ import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
-import slimeknights.mantle.item.ItemBlockMeta;
+import slimeknights.tconstruct.smeltery.item.ItemChannel;
 
-public class ItemBlockSearedFaucetMeta extends ItemBlockMeta {
-	public ItemBlockSearedFaucetMeta(Block block) {
+public class ItemBlockSearedChannelMeta extends ItemChannel {
+	public ItemBlockSearedChannelMeta(Block block) {
 		super(block);
 	}
 
@@ -16,7 +16,7 @@ public class ItemBlockSearedFaucetMeta extends ItemBlockMeta {
 	@MethodsReturnNonnullByDefault
 	public String getItemStackDisplayName(ItemStack stack) {
 		return new TextComponentTranslation(
-			"tile.searedmineralogy.seared_faucet.name",
+			"tile.searedmineralogy.seared_channel.name",
 			((ISearedObject)this.getBlock()).getBaseBlock().getLocalizedName()
 		).getFormattedText();
 	}

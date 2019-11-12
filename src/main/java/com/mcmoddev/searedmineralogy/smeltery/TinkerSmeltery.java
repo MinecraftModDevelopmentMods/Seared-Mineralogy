@@ -4,9 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.mcmoddev.mineralogy.Mineralogy;
 import com.mcmoddev.searedmineralogy.SearedMineralogy;
-import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedFaucet;
-import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedSmelteryController;
-import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedTank;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedFurnaceController;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedStairs;
+import com.mcmoddev.searedmineralogy.smeltery.block.*;
 import com.mcmoddev.searedmineralogy.smeltery.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -26,7 +27,6 @@ import slimeknights.tconstruct.common.TinkerPulse;
 import slimeknights.tconstruct.library.Util;
 import slimeknights.tconstruct.smeltery.block.*;
 import slimeknights.tconstruct.smeltery.block.BlockSeared.SearedType;
-import slimeknights.tconstruct.smeltery.item.ItemChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,12 +93,12 @@ public class TinkerSmeltery extends TinkerPulse {
 					smelteryControllers.add(registerBlock(registry, new BlockSearedSmelteryController(block), baseBlockName + "_smeltery_controller"));
 					searedTanks.add(registerBlock(registry, new BlockSearedTank(block), baseBlockName +"_seared_tank"));
 					faucets.add(registerBlock(registry, new BlockSearedFaucet(block), baseBlockName + "_faucet"));
-//					channels.add(registerBlock(registry, new BlockChannel(), baseBlockName + "channel"));
+					channels.add(registerBlock(registry, new BlockSearedChannel(block), baseBlockName + "channel"));
 //					castingBlocks.add(registerBlock(registry, new BlockCasting(), baseBlockName + "casting"));
-//					smelteryIOs.add(registerBlock(registry, new BlockSmelteryIO(), baseBlockName + "smeltery_io"));
+					smelteryIOs.add(registerBlock(registry, new BlockSearedSmelteryIO(block), baseBlockName + "smeltery_io"));
 //					searedGlasses.add(registerBlock(registry, new BlockSearedGlass(), baseBlockName + "seared_glass"));
-//					searedFurnaceControllers.add(registerBlock(registry, new BlockSearedFurnaceController(), baseBlockName + "seared_furnace_controller"));
-//					tinkerTankControllers.add(registerBlock(registry, new BlockTinkerTankController(), baseBlockName + "tinker_tank_controller"));
+					searedFurnaceControllers.add(registerBlock(registry, new BlockSearedFurnaceController(block), baseBlockName + "seared_furnace_controller"));
+					tinkerTankControllers.add(registerBlock(registry, new BlockSearedTinkerTankController(block), baseBlockName + "tinker_tank_controller"));
 
 					// TODO implement BlockSearedSlab
 //					searedSlab = registerBlock(registry, new BlockSearedSlab(), "seared_slab");
@@ -124,16 +124,16 @@ public class TinkerSmeltery extends TinkerPulse {
 	@SubscribeEvent
 	public void registerItems(Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
-		searedBlocks.forEach(searedBlock -> registerEnumItemBlock(registry, searedBlock));
+		searedBlocks.forEach(searedBlock -> registerEnumItemBlockSeared(registry, searedBlock));
 		smelteryControllers.forEach(smelteryController -> registerItemBlockSmelteryController(registry, smelteryController));
 		searedTanks.forEach(searedTank -> registerItemBlockProp(registry, new ItemBlockSearedTankMeta(searedTank), BlockTank.TYPE));
 		faucets.forEach(faucet -> registerItemBlockFaucet(registry, faucet));
-		channels.forEach(channel -> registerItemBlock(registry, new ItemChannel(channel)));
-		castingBlocks.forEach(castingBlock -> registerItemBlockProp(registry, new ItemBlockMeta(castingBlock), BlockCasting.TYPE));
-		smelteryIOs.forEach(smelteryIO -> registerEnumItemBlock(registry, smelteryIO));
-		searedGlasses.forEach(searedGlass -> registerEnumItemBlock(registry, searedGlass));
-		searedFurnaceControllers.forEach(searedFurnaceController -> registerItemBlock(registry, searedFurnaceController));
-		tinkerTankControllers.forEach(tinkerTankController -> registerItemBlock(registry, tinkerTankController));
+		channels.forEach(channel -> registerItemBlock(registry, new ItemBlockSearedChannelMeta(channel)));
+//		castingBlocks.forEach(castingBlock -> registerItemBlockProp(registry, new ItemBlockMeta(castingBlock), BlockCasting.TYPE));
+		smelteryIOs.forEach(smelteryIO -> registerEnumItemBlockSmelteryIO(registry, smelteryIO));
+//		searedGlasses.forEach(searedGlass -> registerEnumItemBlock(registry, searedGlass));
+		searedFurnaceControllers.forEach(searedFurnaceController -> registerItemBlockFurnaceController(registry, searedFurnaceController));
+		tinkerTankControllers.forEach(tinkerTankController -> registerItemBlockTinkerTankController(registry, tinkerTankController));
 
 		// Slabs
 		searedSlabs.forEach(searedSlab -> registerEnumItemBlockSlab(registry, searedSlab));
@@ -160,6 +160,13 @@ public class TinkerSmeltery extends TinkerPulse {
 		builder.addAll(smelteryIOs);
 		builder.addAll(searedGlasses);
 		slimeknights.tconstruct.smeltery.TinkerSmeltery.validSmelteryBlocks = builder.build();
+
+		builder = ImmutableSet.builder();
+		builder.addAll(slimeknights.tconstruct.smeltery.TinkerSmeltery.validTinkerTankBlocks);
+		builder.addAll(searedBlocks);
+		builder.addAll(searedTanks);
+		builder.addAll(smelteryIOs);
+		builder.addAll(searedGlasses);
 		slimeknights.tconstruct.smeltery.TinkerSmeltery.validTinkerTankBlocks = builder.build();
 
 		builder = ImmutableSet.builder();
@@ -446,7 +453,7 @@ public class TinkerSmeltery extends TinkerPulse {
 //		}
 //	}
 
-	protected static <E extends Enum<E> & IEnumMeta & IStringSerializable> BlockSearedStairs registerBlockSearedStairsFrom(IForgeRegistry<Block> registry, EnumBlock<E> block, E value, String name) {
+	private static <E extends Enum<E> & IEnumMeta & IStringSerializable> BlockSearedStairs registerBlockSearedStairsFrom(IForgeRegistry<Block> registry, EnumBlock<E> block, E value, String name) {
 		return registerBlock(
 			registry,
 			new com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedStairs(
@@ -455,7 +462,7 @@ public class TinkerSmeltery extends TinkerPulse {
 			name);
 	}
 
-	protected static <T extends EnumBlock<?>> T registerEnumItemBlock(IForgeRegistry<Item> registry, T block) {
+	private static <T extends EnumBlock<?>> T registerEnumItemBlockSeared(IForgeRegistry<Item> registry, T block) {
 		ItemBlock itemBlock = new ItemBlockSearedMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
 		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
@@ -463,22 +470,44 @@ public class TinkerSmeltery extends TinkerPulse {
 		return block;
 	}
 
-	protected static <T extends Block> T registerItemBlockFaucet(IForgeRegistry<Item> registry, T block) {
+	private static <T extends EnumBlock<?>> T registerEnumItemBlockSmelteryIO(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedSmelteryIOMeta(block);
+		itemBlock.setTranslationKey(block.getTranslationKey());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+		ItemBlockMeta.setMappingProperty(block, block.prop);
+		return block;
+	}
+
+	private static <T extends Block> T registerItemBlockFaucet(IForgeRegistry<Item> registry, T block) {
 		ItemBlock itemBlock = new ItemBlockSearedFaucetMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
 		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
 		return block;
 	}
 
-	protected static <T extends Block> T registerItemBlockStairs(IForgeRegistry<Item> registry, T block) {
+	private static <T extends Block> T registerItemBlockStairs(IForgeRegistry<Item> registry, T block) {
 		ItemBlock itemBlock = new ItemBlockSearedStairsMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
 		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
 		return block;
 	}
 
-	protected static <T extends Block> T registerItemBlockSmelteryController(IForgeRegistry<Item> registry, T block) {
+	private static <T extends Block> T registerItemBlockSmelteryController(IForgeRegistry<Item> registry, T block) {
 		ItemBlock itemBlock = new ItemBlockSearedSmelteryControllerMeta(block);
+		itemBlock.setTranslationKey(block.getTranslationKey());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+		return block;
+	}
+
+	private static <T extends Block> T registerItemBlockFurnaceController(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedFurnaceControllerMeta(block);
+		itemBlock.setTranslationKey(block.getTranslationKey());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+		return block;
+	}
+
+	private static <T extends Block> T registerItemBlockTinkerTankController(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedTinkerTankControllerMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
 		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
 		return block;
