@@ -7,15 +7,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import slimeknights.tconstruct.smeltery.block.BlockTank;
 
-public class BlockSearedTank extends BlockTank implements ISearedObject {
+public class BlockSearedCasting extends slimeknights.tconstruct.smeltery.block.BlockCasting implements ISearedObject {
 	private Block baseBlock;
 
-	public BlockSearedTank(Block block) {
-		super();
+	public BlockSearedCasting(Block block) {
 		this.baseBlock = block;
-		this.setDefaultState(this.blockState.getBaseState().withProperty(KNOB, false));
 		this.setCreativeTab(SearedMineralogy.CREATIVE_TAB);
 	}
 
@@ -33,7 +30,7 @@ public class BlockSearedTank extends BlockTank implements ISearedObject {
 		return (this.baseBlock.getExplosionResistance(exploder) * 2 / 3);
 	}
 
-	public static String getTankType(int meta) {
-		return TankType.values()[meta].name();
+	public static String getCastingType(int meta) {
+		return CastingType.values()[meta].name();
 	}
 }

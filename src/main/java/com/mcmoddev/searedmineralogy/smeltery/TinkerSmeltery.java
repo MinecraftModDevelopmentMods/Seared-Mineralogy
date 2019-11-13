@@ -6,6 +6,9 @@ import com.mcmoddev.mineralogy.Mineralogy;
 import com.mcmoddev.searedmineralogy.SearedMineralogy;
 import com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared;
 import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedFurnaceController;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedGlass;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedSlab;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedSlab2;
 import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedStairs;
 import com.mcmoddev.searedmineralogy.smeltery.block.*;
 import com.mcmoddev.searedmineralogy.smeltery.item.*;
@@ -91,19 +94,19 @@ public class TinkerSmeltery extends TinkerPulse {
 					String baseBlockName = blockSeared.getRegistryName().getPath();
 					searedBlocks.add(searedBlock);
 					smelteryControllers.add(registerBlock(registry, new BlockSearedSmelteryController(block), baseBlockName + "_smeltery_controller"));
-					searedTanks.add(registerBlock(registry, new BlockSearedTank(block), baseBlockName +"_seared_tank"));
+					searedTanks.add(registerBlock(registry, new BlockSearedTank(block), baseBlockName + "_seared_tank"));
 					faucets.add(registerBlock(registry, new BlockSearedFaucet(block), baseBlockName + "_faucet"));
-					channels.add(registerBlock(registry, new BlockSearedChannel(block), baseBlockName + "channel"));
-//					castingBlocks.add(registerBlock(registry, new BlockCasting(), baseBlockName + "casting"));
-					smelteryIOs.add(registerBlock(registry, new BlockSearedSmelteryIO(block), baseBlockName + "smeltery_io"));
-//					searedGlasses.add(registerBlock(registry, new BlockSearedGlass(), baseBlockName + "seared_glass"));
-					searedFurnaceControllers.add(registerBlock(registry, new BlockSearedFurnaceController(block), baseBlockName + "seared_furnace_controller"));
-					tinkerTankControllers.add(registerBlock(registry, new BlockSearedTinkerTankController(block), baseBlockName + "tinker_tank_controller"));
+					channels.add(registerBlock(registry, new BlockSearedChannel(block), baseBlockName + "_channel"));
+					castingBlocks.add(registerBlock(registry, new BlockSearedCasting(block), baseBlockName + "_casting"));
+					smelteryIOs.add(registerBlock(registry, new BlockSearedSmelteryIO(block), baseBlockName + "_smeltery_io"));
+					searedGlasses.add(registerBlock(registry, new BlockSearedGlass(block), baseBlockName + "_seared_glass"));
+					searedFurnaceControllers.add(registerBlock(registry, new BlockSearedFurnaceController(block), baseBlockName + "_seared_furnace_controller"));
+					tinkerTankControllers.add(registerBlock(registry, new BlockSearedTinkerTankController(block), baseBlockName + "_tinker_tank_controller"));
 
 					// TODO implement BlockSearedSlab
-//					searedSlab = registerBlock(registry, new BlockSearedSlab(), "seared_slab");
+					searedSlabs.add(registerBlock(registry, new BlockSearedSlab(block), baseBlockName + "_seared_slab"));
 					// TODO implement BlockSearedSlab2
-//					searedSlab2 = registerBlock(registry, new BlockSearedSlab2(), "seared_slab2");
+					searedSlab2s.add(registerBlock(registry, new BlockSearedSlab2(block), baseBlockName + "_seared_slab2"));
 
 					searedStairsStones.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.STONE, baseBlockName + "_stairs_stone"));
 					searedStairsCobbles.add(registerBlockSearedStairsFrom(registry, searedBlock, SearedType.COBBLE, baseBlockName + "_stairs_cobble"));
@@ -129,15 +132,17 @@ public class TinkerSmeltery extends TinkerPulse {
 		searedTanks.forEach(searedTank -> registerItemBlockProp(registry, new ItemBlockSearedTankMeta(searedTank), BlockTank.TYPE));
 		faucets.forEach(faucet -> registerItemBlockFaucet(registry, faucet));
 		channels.forEach(channel -> registerItemBlock(registry, new ItemBlockSearedChannelMeta(channel)));
-//		castingBlocks.forEach(castingBlock -> registerItemBlockProp(registry, new ItemBlockMeta(castingBlock), BlockCasting.TYPE));
+		castingBlocks.forEach(castingBlock -> registerItemBlockProp(registry, new ItemBlockSearedCastingMeta(castingBlock), BlockCasting.TYPE));
 		smelteryIOs.forEach(smelteryIO -> registerEnumItemBlockSmelteryIO(registry, smelteryIO));
-//		searedGlasses.forEach(searedGlass -> registerEnumItemBlock(registry, searedGlass));
+		// TODO We should only be registering one type per GlassType value and Mineralogy material
+		searedGlasses.forEach(searedGlass -> registerItemBlockProp(registry, new ItemBlockSearedGlassMeta(searedGlass), BlockSearedGlass.TYPE));
 		searedFurnaceControllers.forEach(searedFurnaceController -> registerItemBlockFurnaceController(registry, searedFurnaceController));
 		tinkerTankControllers.forEach(tinkerTankController -> registerItemBlockTinkerTankController(registry, tinkerTankController));
 
+		// TODO Uncomment and fix this
 		// Slabs
-		searedSlabs.forEach(searedSlab -> registerEnumItemBlockSlab(registry, searedSlab));
-		searedSlab2s.forEach(searedSlab2 -> registerEnumItemBlockSlab(registry, searedSlab2));
+//		searedSlabs.forEach(searedSlab -> registerEnumItemBlockSearedSlab(registry, searedSlab));
+//		searedSlab2s.forEach(searedSlab2 -> registerEnumItemBlockSearedSlab(registry, searedSlab2));
 
 		// Stairs
 		searedStairsStones.forEach(searedStairsStone -> registerItemBlockStairs(registry, searedStairsStone));
@@ -464,6 +469,14 @@ public class TinkerSmeltery extends TinkerPulse {
 
 	private static <T extends EnumBlock<?>> T registerEnumItemBlockSeared(IForgeRegistry<Item> registry, T block) {
 		ItemBlock itemBlock = new ItemBlockSearedMeta(block);
+		itemBlock.setTranslationKey(block.getTranslationKey());
+		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
+		ItemBlockMeta.setMappingProperty(block, block.prop);
+		return block;
+	}
+
+	private static <T extends EnumBlock<?>> T registerEnumItemBlockSearedSlab(IForgeRegistry<Item> registry, T block) {
+		ItemBlock itemBlock = new ItemBlockSearedSlabMeta(block);
 		itemBlock.setTranslationKey(block.getTranslationKey());
 		register(registry, itemBlock, itemBlock.getBlock().getRegistryName());
 		ItemBlockMeta.setMappingProperty(block, block.prop);

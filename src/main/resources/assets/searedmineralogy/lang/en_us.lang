@@ -27,13 +27,20 @@ tile.searedmineralogy.seared_stairs.tile.name=Seared %s Tiles Stairs
 tile.searedmineralogy.seared_stairs.creeper.name=Seared %s Creeperface Stairs
 
 tile.searedmineralogy.seared_smeltery_controller.name=Seared %s Smeltery Controller
-tile.searedmineralogy.seared_tank.name=Seared %s Tank
-tile.searedmineralogy.seared_faucet.name=Seared %s Faucet
-tile.searedmineralogy.seared_channel.name=Seared %s Channel
-#tile.searedmineralogy.seared_casting.name=Seared %s Smeltery Controller
-tile.searedmineralogy.seared_smeltery_io.name=Seared %s Smeltery Drain
-#tile.searedmineralogy.seared_glass.name=Seared %s Smeltery Controller
 tile.searedmineralogy.seared_furnace_controller.name=Seared %s Furnace Controller
 tile.searedmineralogy.seared_tinker_tank_controller.name=Seared %s Tinker Tank Controller
+tile.searedmineralogy.seared_faucet.name=Seared %s Faucet
+tile.searedmineralogy.seared_channel.name=Seared %s Channel
+
+tile.searedmineralogy.seared_tank.tank.name=Seared %s Tank
+tile.searedmineralogy.seared_tank.gauge.name=Seared %s Gauge
+tile.searedmineralogy.seared_tank.window.name=Seared %s Window
+
+tile.searedmineralogy.seared_smeltery_io.drain.name=Seared %s Smeltery Drain
+
+tile.searedmineralogy.seared_casting.basin.name=Seared %s Casting Basin
+tile.searedmineralogy.seared_casting.table.name=Seared %s Casting Table
+
+tile.searedmineralogy.seared_glass.glass.name=Seared %s Glass
 
 tile.searedmineralogy.seared.tooltip=Part of the Smeltery. Safe for decoration.

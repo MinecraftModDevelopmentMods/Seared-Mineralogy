@@ -1,14 +1,16 @@
 package com.mcmoddev.searedmineralogy.smeltery.item;
 
 import com.mcmoddev.searedmineralogy.smeltery.ISearedObject;
-import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedTank;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedCasting;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
+import slimeknights.mantle.item.ItemBlockMeta;
 
-public class ItemBlockSearedTankMeta extends ItemBlockSearedMeta {
-	public ItemBlockSearedTankMeta(Block block) {
+public class ItemBlockSearedCastingMeta extends ItemBlockMeta {
+	public ItemBlockSearedCastingMeta(Block block) {
 		super(block);
 	}
 
@@ -16,7 +18,7 @@ public class ItemBlockSearedTankMeta extends ItemBlockSearedMeta {
 	@MethodsReturnNonnullByDefault
 	public String getItemStackDisplayName(ItemStack stack) {
 		return new TextComponentTranslation(
-			"tile.searedmineralogy.seared_tank."+ BlockSearedTank.getTankType(stack.getMetadata()).toLowerCase() +".name",
+			"tile.searedmineralogy.seared_casting." + BlockSearedCasting.getCastingType(stack.getMetadata()).toLowerCase() + ".name",
 			((ISearedObject)this.getBlock()).getBaseBlock().getLocalizedName()
 		).getFormattedText();
 	}

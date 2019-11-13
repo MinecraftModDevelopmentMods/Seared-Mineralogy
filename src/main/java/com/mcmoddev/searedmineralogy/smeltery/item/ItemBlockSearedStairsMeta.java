@@ -16,7 +16,7 @@ public class ItemBlockSearedStairsMeta extends ItemBlockSearedMeta {
 	@MethodsReturnNonnullByDefault
 	public String getItemStackDisplayName(ItemStack stack) {
 		return new TextComponentTranslation(
-			"tile.searedmineralogy.seared_stairs." + ((BlockSearedStairs)this.block).getSearedType() + ".name",
+			"tile.searedmineralogy.seared_stairs." + ((BlockSearedStairs)this.block).getSearedType().toLowerCase() + ".name",
 			((ISearedObject)this.getBlock()).getBaseBlock().getLocalizedName()
 		).getFormattedText();
 	}

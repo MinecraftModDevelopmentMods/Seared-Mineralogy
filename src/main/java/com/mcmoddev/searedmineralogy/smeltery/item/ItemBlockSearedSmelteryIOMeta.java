@@ -2,6 +2,7 @@ package com.mcmoddev.searedmineralogy.smeltery.item;
 
 import com.mcmoddev.searedmineralogy.smeltery.ISearedObject;
 import com.mcmoddev.searedmineralogy.smeltery.block.BlockSeared;
+import com.mcmoddev.searedmineralogy.smeltery.block.BlockSearedSmelteryIO;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,7 @@ public class ItemBlockSearedSmelteryIOMeta extends ItemBlockMeta {
 	@MethodsReturnNonnullByDefault
 	public String getItemStackDisplayName(ItemStack stack) {
 		return new TextComponentTranslation(
-			"tile.searedmineralogy.seared_smeltery_io.name",
+			"tile.searedmineralogy.seared_smeltery_io."+ BlockSearedSmelteryIO.getSearedType(stack.getMetadata())+".name",
 			((ISearedObject)this.getBlock()).getBaseBlock().getLocalizedName()
 		).getFormattedText();
 	}
